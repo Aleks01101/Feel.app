@@ -9,21 +9,43 @@ Builder.load_file('design.kv')
 class LoginScreen(Screen):
     def sign_up(self):
         self.manager.current = "sign_up_screen"
+    
+    def login(self,uname,pword):
+        with open("users.json") as file:
+            users = json.load(file) #giving us a dictionary
+            if uname in users and users[uname]['password'] == pword:
+                self.manager.current = "login_screen_success"
+            else:
+                self.ids.login_wrong.text = "Wrong username or password"
+            
+    
+
 
 
 class RootWidget(ScreenManager):
     pass
 
 class SignUpScreen(Screen):
-    def add_user(self,user,password):
+    def add_user(self,uname,pword):
         with open("users.json") as file:
             users = json.load(file)
         
-        users[user] = {'username': user, 'password': password, 'created': datetime.now().strftime("%Y-%m-%d time: %H-%M-%S")}
+        users[uname] = {'username': uname, 'password': pword, 'created': datetime.now().strftime("date: %Y-%m-%d time: %H-%M-%S")}
 
         with open("users.json", 'w') as file:
             json.dump(users,file)
-        print(users)
+        self.manager.current = "sign_up_screen_success"
+
+class SignUpScreenSuccess(Screen):
+    def back_login(self):
+        self.manager.transition.direction = 'right' #changing transition of the screen to the right direction
+        self.manager.current = "login_screen"
+
+class LoginScreenSuccess(Screen):
+    def log_out(self):
+        self.manager.transition.direction = 'right'
+        self.manager.current = "login_screen"
+
 
 class MainApp(App):
     def build(self):
