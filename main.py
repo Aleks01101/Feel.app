@@ -1,8 +1,10 @@
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
-import json
+import json, glob, random
 from datetime import datetime
+from pathlib import Path 
+
 
 Builder.load_file('design.kv')
 
@@ -45,6 +47,17 @@ class LoginScreenSuccess(Screen):
     def log_out(self):
         self.manager.transition.direction = 'right'
         self.manager.current = "login_screen"
+    
+    def get_quote(self,feel):
+        feel = feel.lower()
+        feeling_quotes = glob.glob("quotes/*txt")
+        feeling_quotes = [Path(filename).stem for filename in feeling_quotes] #!
+
+        if feel in feeling_quotes:
+            with open(f"quotes/{feel}.txt") as file:
+                quotes = file.readlines()
+            print(quotes)
+            # self.ids.quote.text = random.choice(quotes)
 
 
 class MainApp(App):
