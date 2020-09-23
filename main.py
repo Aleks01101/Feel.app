@@ -54,10 +54,9 @@ class LoginScreenSuccess(Screen):
         feeling_quotes = [Path(filename).stem for filename in feeling_quotes] #!
 
         if feel in feeling_quotes:
-            with open(f"quotes/{feel}.txt") as file:
+            with open(f"quotes/{feel}.txt ",encoding="utf8") as file:
                 quotes = file.readlines()
-            print(quotes)
-            # self.ids.quote.text = random.choice(quotes)
+            self.ids.quote.text = random.choice(quotes)
 
 
 class MainApp(App):
