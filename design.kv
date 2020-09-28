@@ -32,7 +32,8 @@
             Button:
                 text: "Forgot Password?"
                 background_color: 1, 1, 1, 0
-                opacity: 1 if self.state == 'normal' else 0.5 
+                opacity: 1 if self.state == 'normal' else 0.5
+                on_press: root.forgot()
             Button:
                 text: "Sign Up"
                 background_color: 1, 1, 1, 0
@@ -52,9 +53,12 @@
         TextInput:
             id: password
             hint_text:"Your  New Password"
+        TextInput:
+            id: secret_answer
+            hint_text:"Your  Secret Answer"
         Button:
             text: "Sign Up"
-            on_press: root.add_user(root.ids.username.text, root.ids.password.text)
+            on_press: root.add_user(root.ids.username.text, root.ids.password.text, root.ids.secret_answer.text)
         
 <SignUpScreenSuccess>:
     GridLayout:
@@ -93,7 +97,23 @@
                 height: self.texture_size[1]
 
 
-
+<ForgotScreen>:
+    GridLayout:
+        cols: 1
+        Label:
+            text: "If you forgot your password please enter your username and secret answer"
+        TextInput:
+            id: username
+            hint_text: "Enter your username"
+        TextInput:
+            id: secret_answer
+            hint_text: "Enter your secret question"
+        Button:
+            text: "Get my password"
+            on_press: root.pass_forgot(root.ids.username.text, root.ids.secret_answer.text)
+        Label:
+            text: ""
+            id: passforgot
 
 
 <RootWidget>:
@@ -105,4 +125,6 @@
         name: "sign_up_screen_success"
     LoginScreenSuccess:
         name: "login_screen_success"
+    ForgotScreen:
+        name: "forgot_screen"
     

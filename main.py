@@ -14,6 +14,9 @@ Builder.load_file('design.kv')
 class LoginScreen(Screen):
     def sign_up(self):
         self.manager.current = "sign_up_screen"
+
+    def forgot(self):
+        self.manager.current = "forgot_screen"
     
     def login(self,uname,pword):
         with open("users.json") as file:
@@ -31,11 +34,11 @@ class RootWidget(ScreenManager):
     pass
 
 class SignUpScreen(Screen):
-    def add_user(self,uname,pword):
+    def add_user(self,uname,pword,sanswer):
         with open("users.json") as file:
             users = json.load(file)
         
-        users[uname] = {'username': uname, 'password': pword, 'created': datetime.now().strftime("date: %Y-%m-%d time: %H-%M-%S")}
+        users[uname] = {'username': uname, 'password': pword, 'created': datetime.now().strftime("date: %Y-%m-%d time: %H-%M-%S"), 'secret_question': sanswer}
 
         with open("users.json", 'w') as file:
             json.dump(users,file)
@@ -60,6 +63,17 @@ class LoginScreenSuccess(Screen):
             with open(f"quotes/{feel}.txt ",encoding="utf8") as file:
                 quotes = file.readlines()
             self.ids.quote.text = random.choice(quotes)
+
+class ForgotScreen(Screen):
+    def pass_forgot(self,uname,sanswer):
+        with open("users.json") as file:
+            users = json.load(file)
+            if uname in users and users[uname]['secret_question'] == sanswer:
+                self.ids.passforgot.text = users[uname]['password']
+                # return users[uname]['password']
+            else:
+                self.ids.passforgot.text = "Wrong username or secret answer"
+            
 
 
 class ImageButton(ButtonBehavior,HoverBehavior,Image):
